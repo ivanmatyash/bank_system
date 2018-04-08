@@ -1,8 +1,8 @@
 package client
 
 type Client struct {
-	ID    int32
-	Name  string
+	id    int32 `db:"ID"`
+	name  string
 	email string
 	phone string
 }

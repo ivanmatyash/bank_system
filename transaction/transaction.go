@@ -7,14 +7,14 @@ import (
 )
 
 type Transaction struct {
-	ID        int32
-	diffMoney map[int32]int64
+	id        int32
+	diffMoney map[int32]int64 `db:"diff_money"`
 	comment   string
 	success   bool
 }
 
 func NewTransaction(cm string) (*Transaction, error) {
-	tr := Transaction{ID: 55, comment: cm}
+	tr := Transaction{id: 55, comment: cm}
 	tr.diffMoney = make(map[int32]int64)
 	if err := tr.validate(); err != nil {
 		return nil, err
@@ -24,12 +24,12 @@ func NewTransaction(cm string) (*Transaction, error) {
 }
 
 func (t *Transaction) Start() {
-	fmt.Printf("Start transaction №%d.\n", t.ID)
+	fmt.Printf("Start transaction №%d.\n", t.id)
 }
 
 func (t *Transaction) End(ok bool) {
 	t.success = ok
-	fmt.Printf("End transcation №%d = %t.\n", t.ID, t.success)
+	fmt.Printf("End transcation №%d = %t.\n", t.id, t.success)
 }
 
 func (t *Transaction) DiffMoney() map[int32]int64 {

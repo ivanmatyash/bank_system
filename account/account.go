@@ -8,7 +8,7 @@ import (
 )
 
 type Account struct {
-	ID      int32
+	id      int32
 	balance int64
 }
 
@@ -50,7 +50,7 @@ func (a *Account) Charge(money int64) (err error) {
 	}
 	startBalance := a.balance
 	a.balance -= money
-	tr.AddDiffMoney(a.ID, a.balance-startBalance)
+	tr.AddDiffMoney(a.id, a.balance-startBalance)
 	tr.End(true)
 	return err
 }
@@ -70,7 +70,7 @@ func (a *Account) Add(money int64) (err error) {
 	}
 	startBalance := a.balance
 	a.balance += money
-	tr.AddDiffMoney(a.ID, a.balance-startBalance)
+	tr.AddDiffMoney(a.id, a.balance-startBalance)
 	tr.End(true)
 	return err
 }
@@ -92,7 +92,7 @@ func (a *Account) Transfer(idAccount int32, money int64) (err error) {
 	// TODO: Add creating of object
 	startBalance := a.balance
 	a.balance += money
-	tr.AddDiffMoney(a.ID, a.balance-startBalance)
+	tr.AddDiffMoney(a.id, a.balance-startBalance)
 	tr.End(true)
 	return err
 }
@@ -116,7 +116,7 @@ func (a *Account) validateChargeMoney(money int64) error {
 		return err
 	}
 	if a.balance < money {
-		return fmt.Errorf(vld.ErrorAccountCharge, a.ID, a.balance, money)
+		return fmt.Errorf(vld.ErrorAccountCharge, a.id, a.balance, money)
 	}
 	return nil
 }
