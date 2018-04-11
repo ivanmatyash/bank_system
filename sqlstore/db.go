@@ -21,7 +21,7 @@ func InitDB() error {
 	pgSslmode := "disable"
 	pgPort := "5432"
 
-	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s"+
+	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s "+
 		"dbname=%s sslmode=%s", pgHost, pgPort, pgUser, pgPassword, pgDbname,
 		pgSslmode)
 
