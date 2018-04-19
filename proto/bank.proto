@@ -3,21 +3,45 @@ package bank;
 
 import "google/api/annotations.proto";
 
-message Account {
-  int32 id = 1;
-  int32 client_id = 2;
-  int64 balance = 3;
+message Client {
+    int32 id = 1;
+    string name = 2;
+    string email = 3;
+    string phone = 4;
 }
 
+message Account {
+    int32 id = 1;
+    int32 client_id = 2;
+    int64 balance = 3;
+}
+
+
 message RequestById {
-  int32 id = 1;
+    int32 id = 1;
 }
 
 message ResponseAccount {
-  repeated Account result = 1;
+    repeated Account result = 1;
+}
+
+message ResponseClient {
+    repeated Client result = 1;
 }
 
 service BankService {
+    rpc ListClients(RequestById) returns (ResponseClient) {
+         option (google.api.http) = {
+             get: "/clients"
+         };
+    }
+
+    rpc ReadClient(RequestById) returns (ResponseClient) {
+         option (google.api.http) = {
+             get: "/clients/{id}"
+         };
+    }
+
     rpc ListAccounts(RequestById) returns (ResponseAccount) {
         option (google.api.http) = {
             get: "/accounts"
