@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"net/http"
-	"strings"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/ivanmatyash/bank-golang/proto"
@@ -20,43 +19,16 @@ var (
 	BankAddr string = "0.0.0.0:9091"
 )
 
-var handlers map[string]http.Handler
+func main() {
 
-func initHandlers() {
-	handlers = make(map[string]http.Handler)
-
-	bankHandler, err := newBankHandler(context.Background(), BankAddr)
+	handler, err := newBankHandler(context.Background(), BankAddr)
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	handlers["accounts"] = bankHandler
-}
-
-func httpServe(w http.ResponseWriter, r *http.Request) {
-	defer r.Body.Close()
 	mux := http.NewServeMux()
-	url := strings.Split(r.URL.Path, "/")
-	if len(url) < 3 {
-		http.Error(w, "Error. Not implemented: "+r.URL.Path, 501)
-		return
-	}
 
-	serviceName := url[2]
+	mux.Handle(baseURL+"/", http.StripPrefix(baseURL, handler))
 
-	if handler, ok := handlers[serviceName]; ok {
-		mux.Handle(baseURL+"/", http.StripPrefix(baseURL, handler))
-		mux.ServeHTTP(w, r)
-		return
-	}
-	http.Error(w, "Invalid address.", 501)
-	return
-}
-
-func main() {
-	initHandlers()
-	mux := http.NewServeMux()
-	mux.HandleFunc(baseURL+"/", httpServe)
 	http.ListenAndServe(Addr, mux)
 }
 
