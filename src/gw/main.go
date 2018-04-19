@@ -15,8 +15,8 @@ const (
 )
 
 var (
-	Addr     string = "0.0.0.0:8080"
-	BankAddr string = "0.0.0.0:9091"
+	Addr     string = "gw_bank.net:80"
+	BankAddr string = "bank.net:91"
 )
 
 func main() {
