@@ -2,12 +2,14 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net"
 
 	"google.golang.org/grpc"
 
 	"github.com/ivanmatyash/bank-golang/api"
 	"github.com/ivanmatyash/bank-golang/bankservice"
+	"github.com/ivanmatyash/bank-golang/sqlstore"
 )
 
 var Addr string = "bank.net:91"
@@ -19,10 +21,10 @@ func main() {
 		fmt.Println(err)
 	}
 
-	//err = sqlstore.InitDB()
-	//if err != nil {
-	//	log.Fatalln(err)
-	//}
+	err = sqlstore.InitDB()
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	server := grpc.NewServer()
 	api.RegisterBankServiceServer(server, bankservice.NewBankServer())

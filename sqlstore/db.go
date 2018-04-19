@@ -14,9 +14,9 @@ var (
 )
 
 func InitDB() error {
-	pgDbname := "bank"
+	pgDbname := "postgres"
 	pgUser := "postgres"
-	pgHost := "172.18.0.2"
+	pgHost := "pg-bank.net"
 	pgPassword := "postgres"
 	pgSslmode := "disable"
 	pgPort := "5432"
