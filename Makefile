@@ -6,3 +6,5 @@ gen:
 	  --go_out=plugins=grpc:. \
 	  --grpc-gateway_out=logtostderr=true:. \
 	  ./proto/bank.proto
+
+	  mv ./proto/*.go ./api

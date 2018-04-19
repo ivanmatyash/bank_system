@@ -2,11 +2,11 @@
 // source: proto/bank.proto
 
 /*
-Package bank is a reverse proxy.
+Package api is a reverse proxy.
 
 It translates gRPC into RESTful JSON APIs.
 */
-package bank
+package api
 
 import (
 	"io"

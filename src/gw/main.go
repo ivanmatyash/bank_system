@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/ivanmatyash/bank-golang/proto"
+	"github.com/ivanmatyash/bank-golang/api"
 	"google.golang.org/grpc"
 )
 
@@ -37,7 +37,7 @@ func newBankHandler(ctx context.Context, addr string, opts ...runtime.ServeMuxOp
 	mux := runtime.NewServeMux(opts...)
 	dialOpts := []grpc.DialOption{grpc.WithInsecure()}
 
-	err := bank.RegisterBankServiceHandlerFromEndpoint(ctx, mux, addr, dialOpts)
+	err := api.RegisterBankServiceHandlerFromEndpoint(ctx, mux, addr, dialOpts)
 	if err != nil {
 		return nil, err
 	}
