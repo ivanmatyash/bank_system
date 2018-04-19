@@ -1,0 +1,7 @@
+FROM scratch
+
+WORKDIR /usr/local
+
+COPY bin/bank bin/bank
+
+ENTRYPOINT ["bin/bank"]

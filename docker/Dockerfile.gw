@@ -1,0 +1,7 @@
+FROM scratch
+
+WORKDIR /usr/local
+
+COPY bin/gw bin/gw
+
+ENTRYPOINT ["bin/gw"]
