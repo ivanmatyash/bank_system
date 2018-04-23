@@ -24,6 +24,10 @@ up: image pg-start
 	docker run --name bank_microservice -d -p "9091:91" --network $(NETWORK) --network-alias bank.$(NETWORK) bank:latest
 	docker run --name gw_bank -d -p "8080:80" --network $(NETWORK) --network-alias gw-bank.$(NETWORK) gw-bank:latest
 
+db-create:
+	@echo "Creating database..."
+	@docker exec pg-bank /tmp/db_create
+
 down:
 	docker stop gw_bank || true
 	docker rm -f gw_bank || true
