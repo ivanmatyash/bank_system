@@ -23,10 +23,6 @@
   name = "github.com/lib/pq"
   branch = "master"
 
-[[constraint]]
-  name = "golang.org/x/text"
-  version = "v0.3.0"
-
 [prune]
   go-tests = true
   unused-packages = true
