@@ -26,11 +26,11 @@ func ValidateMoneyNegative(money int64) error {
 }
 
 func ValidateTransactionComment(comment string) error {
-	err := validateLengthString("Comment to transaction", comment, 1, 255)
+	err := ValidateLengthString("Comment to transaction", comment, 1, 255)
 	return err
 }
 
-func validateLengthString(name string, s string, min int, max int) error {
+func ValidateLengthString(name string, s string, min int, max int) error {
 	l := len(s)
 	if l == 0 && min > 0 {
 		return fmt.Errorf("%s %s", name, ErrorEmptyString)
