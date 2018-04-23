@@ -9,6 +9,8 @@ image: build
 	docker build -f ./docker/Dockerfile.bank -t bank:latest .
 	docker build -f ./docker/Dockerfile.gw -t gw-bank:latest .
 
+vendor:
+	dep ensure
 
 init:
 	docker network create $(NETWORK)
