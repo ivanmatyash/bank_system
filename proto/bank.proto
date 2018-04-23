@@ -16,9 +16,20 @@ message Account {
     int64 balance = 3;
 }
 
+message Transaction {
+    int32 id = 1;
+    repeated int64 diff_money = 2;
+    string comment = 3;
+    bool success = 4;
+    int64 timestamp = 5;
+}
 
 message RequestById {
     int32 id = 1;
+}
+
+message RequestClient {
+    Client req = 1;
 }
 
 message ResponseAccount {
@@ -39,6 +50,13 @@ service BankService {
     rpc ReadClient(RequestById) returns (ResponseClient) {
          option (google.api.http) = {
              get: "/clients/{id}"
+         };
+    }
+
+    rpc CreateClient(RequestClient) returns (ResponseClient) {
+         option (google.api.http) = {
+             post: "/clients"
+             body: "req"
          };
     }
 

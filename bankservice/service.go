@@ -28,3 +28,7 @@ func (s *bankServer) ListClients(ctx context.Context, req *api.RequestById) (*ap
 func (s *bankServer) ReadClient(ctx context.Context, req *api.RequestById) (*api.ResponseClient, error) {
 	return &api.ResponseClient{[]*api.Client{&api.Client{1, "ivan", "1", "11"}}}, nil
 }
+
+func (s *bankServer) CreateClient(ctx context.Context, req *api.RequestClient) (*api.ResponseClient, error) {
+	return &api.ResponseClient{[]*api.Client{&api.Client{1, "ivan", "1", "11"}}}, nil
+}
