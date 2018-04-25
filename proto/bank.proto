@@ -12,6 +12,7 @@ message Client {
 
 message Account {
     int32 id = 1;
+    // @inject_tag: db:"client_id"
     int32 client_id = 2;
     int64 balance = 3;
 }
@@ -28,9 +29,14 @@ message RequestById {
     int32 id = 1;
 }
 
+message RequestAccount {
+    Account req = 1;
+}
+
 message RequestClient {
     Client req = 1;
 }
+
 
 message ResponseAccount {
     repeated Account result = 1;
@@ -76,6 +82,19 @@ service BankService {
     rpc ReadAccount(RequestById) returns (ResponseAccount) {
         option (google.api.http) = {
             get: "/accounts/{id}"
+        };
+    }
+
+    rpc CreateAccount(RequestAccount) returns (ResponseAccount) {
+        option (google.api.http) = {
+            post: "/accounts"
+            body: "req"
+        };
+    }
+
+    rpc DeleteAccount(RequestById) returns (ResponseAccount) {
+        option (google.api.http) = {
+            delete: "/accounts/{id}"
         };
     }
 }

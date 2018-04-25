@@ -59,5 +59,6 @@ gen:
 	  --go_out=plugins=grpc:. \
 	  --grpc-gateway_out=logtostderr=true:. \
 	  ./proto/bank.proto
+	  protoc-go-inject-tag -input=./proto/bank.pb.go
 
 	  mv ./proto/*.go ./api
