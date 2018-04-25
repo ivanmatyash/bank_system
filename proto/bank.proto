@@ -31,6 +31,7 @@ message RequestById {
 
 message RequestAccount {
     Account req = 1;
+    int32 id = 2;
 }
 
 message RequestClient {
@@ -91,6 +92,13 @@ service BankService {
             body: "req"
         };
     }
+
+    rpc UpdateAccount(RequestAccount) returns (ResponseAccount) {
+            option (google.api.http) = {
+                put: "/accounts/{id}"
+                body: "req"
+            };
+        }
 
     rpc DeleteAccount(RequestById) returns (ResponseAccount) {
         option (google.api.http) = {
