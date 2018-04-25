@@ -12,6 +12,15 @@ import (
 	"github.com/ivanmatyash/bank-golang/sqlstore"
 )
 
+func (s *bankServer) ListClients(ctx context.Context, req *api.RequestById) (*api.ResponseClient, error) {
+	clients := []*api.Client{}
+	err := sqlstore.Db.Select(&clients, "SELECT * FROM clients")
+	if err != nil {
+		return &api.ResponseClient{[]*api.Client{}}, err
+	}
+	return &api.ResponseClient{clients}, nil
+}
+
 func (s *bankServer) ReadClient(ctx context.Context, req *api.RequestById) (*api.ResponseClient, error) {
 	client := api.Client{}
 	err := sqlstore.Db.Get(&client, "SELECT * FROM clients WHERE id=$1", req.GetId())
