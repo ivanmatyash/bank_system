@@ -8,12 +8,12 @@ import (
 )
 
 func (s *bankServer) StartTransaction(comment string) (*api.Transaction, error) {
-	sqlstore.Mutex.Lock()
 	transaction := api.Transaction{}
 	transaction.Comment = comment
 	if err := transaction.Validate(); err != nil {
 		return nil, err
 	}
+	sqlstore.Mutex.Lock()
 	log.Printf("Start transaction '%s'.\n", comment)
 
 	return &transaction, nil
