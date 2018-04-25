@@ -3,9 +3,6 @@ package validate
 import "fmt"
 
 var (
-	ErrorAccountIsNil           = "Error: Account is nil!"
-	ErrorAccountCharge          = "Error: Insufficient funds on the account #%d(%d). Try to charge %d."
-	ErrorAccountNegative        = "Error: money to charging/adding can't be negative! (%d)"
 	ErrorAccountNegativeBalance = "Error: Account balance cannot be negative!"
 	ErrorEmptyString            = "string is empty."
 )
@@ -16,18 +13,6 @@ func ValidateAccountBalance(balance int64) error {
 	}
 
 	return nil
-}
-
-func ValidateMoneyNegative(money int64) error {
-	if money < 0 {
-		return fmt.Errorf(ErrorAccountNegative, money)
-	}
-	return nil
-}
-
-func ValidateTransactionComment(comment string) error {
-	err := ValidateLengthString("Comment to transaction", comment, 1, 255)
-	return err
 }
 
 func ValidateLengthString(name string, s string, min int, max int) error {
