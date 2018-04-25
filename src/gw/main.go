@@ -6,8 +6,9 @@ import (
 	"net/http"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/ivanmatyash/bank-golang/api"
 	"google.golang.org/grpc"
+
+	"github.com/ivanmatyash/bank-golang/api"
 )
 
 const (
