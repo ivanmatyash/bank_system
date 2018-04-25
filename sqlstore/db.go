@@ -3,14 +3,16 @@ package sqlstore
 import (
 	"fmt"
 	"log"
+	"sync"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
 var (
-	Db  *sqlx.DB
-	err error
+	Db    *sqlx.DB
+	err   error
+	Mutex sync.Mutex
 )
 
 func InitDB() error {

@@ -20,11 +20,16 @@ CREATE TABLE accounts (
 CREATE TABLE transactions(
   id SERIAL PRIMARY KEY NOT NULL,
   comment varchar(255) NOT NULL,
-  success boolean DEFAULT FALSE
+  success boolean DEFAULT FALSE,
+  timestamp bigint DEFAULT 0
 );
 
 CREATE TABLE money_changes(
   transaction_id integer REFERENCES transactions (id),
   account_id integer REFERENCES accounts (id),
   diff integer
-)
+);
+
+INSERT INTO clients (name, email, phone) VALUES ('Ivan', 'mail@email.ru', '3763025');
+
+INSERT INTO accounts (client_id, balance) VALUES (1, 0);

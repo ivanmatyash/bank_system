@@ -26,3 +26,10 @@ func (a *Account) Validate() error {
 	}
 	return nil
 }
+
+func (t *Transaction) Validate() error {
+	if err := validate.ValidateLengthString("Comment to transaction", t.Comment, 1, 255); err != nil {
+		return err
+	}
+	return nil
+}
