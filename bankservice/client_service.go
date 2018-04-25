@@ -59,11 +59,11 @@ func (s *bankServer) CreateClient(ctx context.Context, req *api.RequestClient) (
 			:email,
 			:phone
 		)`
-	_, err = sqlstore.Db.NamedQuery(query, req.Req)
-
+	res, err := sqlstore.Db.NamedQuery(query, req.Req)
 	if err != nil {
 		return &api.ResponseClient{[]*api.Client{&api.Client{}}}, err
 	}
+	res.Close()
 
 	return &api.ResponseClient{[]*api.Client{req.Req}}, nil
 }

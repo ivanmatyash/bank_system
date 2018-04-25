@@ -55,11 +55,11 @@ func (s *bankServer) CreateAccount(ctx context.Context, req *api.RequestAccount)
 			:client_id, 
 			:balance
 		)`
-	_, err = sqlstore.Db.NamedQuery(query, req.Req)
-
+	res, err := sqlstore.Db.NamedQuery(query, req.Req)
 	if err != nil {
 		return &api.ResponseAccount{[]*api.Account{&api.Account{}}}, err
 	}
+	res.Close()
 
 	return &api.ResponseAccount{[]*api.Account{req.Req}}, nil
 }
