@@ -36,9 +36,6 @@ func (s *bankServer) ReadAccount(ctx context.Context, req *api.RequestById) (*ap
 }
 
 func (s *bankServer) CreateAccount(ctx context.Context, req *api.RequestAccount) (*api.ResponseAccount, error) {
-	//if err := req.Req.Validate(); err != nil {
-	//	return &api.ResponseClient{[]*api.Client{&api.Client{}}}, err
-	//}
 	var nextId int32
 	err := sqlstore.Db.QueryRow("select nextval ('accounts_id_seq')").Scan(&nextId)
 	if err != nil {
@@ -46,6 +43,7 @@ func (s *bankServer) CreateAccount(ctx context.Context, req *api.RequestAccount)
 		return &api.ResponseAccount{[]*api.Account{&api.Account{}}}, err
 	}
 	req.Req.Id = nextId
+	req.Req.Balance = 0
 
 	query := `
 		INSERT INTO accounts(
@@ -67,9 +65,11 @@ func (s *bankServer) CreateAccount(ctx context.Context, req *api.RequestAccount)
 }
 
 func (s *bankServer) UpdateAccount(ctx context.Context, req *api.RequestAccount) (*api.ResponseAccount, error) {
+	if err := req.Req.Validate(); err != nil {
+		return &api.ResponseAccount{[]*api.Account{&api.Account{}}}, err
+	}
 
 	req.GetReq().Id = req.GetId()
-
 	query := `
 		UPDATE accounts SET
 			client_id = :client_id,

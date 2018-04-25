@@ -19,3 +19,10 @@ func (c *Client) Validate() error {
 	}
 	return nil
 }
+
+func (a *Account) Validate() error {
+	if err := validate.ValidateAccountBalance(a.Balance); err != nil {
+		return err
+	}
+	return nil
+}
