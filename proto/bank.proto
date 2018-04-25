@@ -60,6 +60,13 @@ service BankService {
          };
     }
 
+    rpc DeleteClient(RequestById) returns (ResponseClient) {
+         option (google.api.http) = {
+             delete: "/clients/{id}"
+         };
+    }
+
+
     rpc ListAccounts(RequestById) returns (ResponseAccount) {
         option (google.api.http) = {
             get: "/accounts"
