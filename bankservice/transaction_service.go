@@ -2,6 +2,7 @@ package bankservice
 
 import (
 	"log"
+	"time"
 
 	"github.com/ivanmatyash/bank-golang/api"
 	"github.com/ivanmatyash/bank-golang/sqlstore"
@@ -9,6 +10,7 @@ import (
 
 func (s *bankServer) StartTransaction(comment string) (*api.Transaction, error) {
 	transaction := api.Transaction{}
+	transaction.DiffMoney = make(map[int32]int64)
 	transaction.Comment = comment
 	if err := transaction.Validate(); err != nil {
 		return nil, err
@@ -29,6 +31,7 @@ func (s *bankServer) EndTransaction(transaction *api.Transaction, ok bool) error
 		return err
 	}
 	transaction.Id = nextId
+	transaction.Timestamp = time.Now().Unix()
 
 	query := `
 		INSERT INTO transactions(
