@@ -60,6 +60,12 @@ service BankService {
          };
     }
 
+    rpc ListAccountsByClient(RequestById) returns (ResponseAccount) {
+             option (google.api.http) = {
+                 get: "/clients/{id}/accounts"
+             };
+        }
+
     rpc CreateClient(RequestClient) returns (ResponseClient) {
          option (google.api.http) = {
              post: "/clients"

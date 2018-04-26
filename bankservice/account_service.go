@@ -21,6 +21,15 @@ func (s *bankServer) ListAccounts(ctx context.Context, req *api.RequestById) (*a
 	return &api.ResponseAccount{accounts}, nil
 }
 
+func (s *bankServer) ListAccountsByClient(ctx context.Context, req *api.RequestById) (*api.ResponseAccount, error) {
+	accounts := []*api.Account{}
+	err := sqlstore.Db.Select(&accounts, "SELECT * FROM accounts WHERE client_id = $1", req.GetId())
+	if err != nil {
+		return &api.ResponseAccount{[]*api.Account{}}, err
+	}
+	return &api.ResponseAccount{accounts}, nil
+}
+
 func (s *bankServer) ReadAccount(ctx context.Context, req *api.RequestById) (*api.ResponseAccount, error) {
 	account := api.Account{}
 	err := sqlstore.Db.Get(&account, "SELECT * FROM accounts WHERE id=$1", req.GetId())
