@@ -43,6 +43,12 @@ message RequestAccountMoney {
     int64 money = 2;
 }
 
+message RequestTransferMoney {
+    Account src = 1;
+    Account dst = 2;
+    int64 money = 3;
+}
+
 message ResponseAccount {
     repeated Account result = 1;
 }
@@ -124,4 +130,6 @@ service BankService {
     rpc ChangeBalance(RequestAccountMoney) returns (ResponseAccount) {}
 
     rpc GetBalance(RequestAccount) returns (ResponseMoney) {}
+
+    rpc TransferMoney(RequestTransferMoney) returns (ResponseAccount) {}
 }
