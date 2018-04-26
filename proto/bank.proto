@@ -19,7 +19,7 @@ message Account {
 
 message Transaction {
     int32 id = 1;
-    repeated int64 diff_money = 2;
+    map <int32, int64> diff_money = 2;
     string comment = 3;
     bool success = 4;
     int64 timestamp = 5;
@@ -38,6 +38,10 @@ message RequestClient {
     Client req = 1;
 }
 
+message RequestAccountMoney {
+    Account account = 1;
+    int64 money = 2;
+}
 
 message ResponseAccount {
     repeated Account result = 1;
@@ -45,6 +49,10 @@ message ResponseAccount {
 
 message ResponseClient {
     repeated Client result = 1;
+}
+
+message ResponseMoney {
+    int64 money = 1;
 }
 
 service BankService {
@@ -111,4 +119,9 @@ service BankService {
             delete: "/accounts/{id}"
         };
     }
+
+
+    rpc ChangeBalance(RequestAccountMoney) returns (ResponseAccount) {}
+
+    rpc GetBalance(RequestAccount) returns (ResponseMoney) {}
 }
