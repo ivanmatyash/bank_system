@@ -16,8 +16,10 @@ func (s *bankServer) ListClients(ctx context.Context, req *api.RequestById) (*ap
 	clients := []*api.Client{}
 	err := sqlstore.Db.Select(&clients, "SELECT * FROM clients")
 	if err != nil {
+		log.Println(err)
 		return &api.ResponseClient{[]*api.Client{}}, err
 	}
+	log.Println("Clients were readed.")
 	return &api.ResponseClient{clients}, nil
 }
 
@@ -29,9 +31,9 @@ func (s *bankServer) ReadClient(ctx context.Context, req *api.RequestById) (*api
 		if err == sql.ErrNoRows {
 			return &api.ResponseClient{[]*api.Client{&api.Client{}}}, status.Errorf(codes.NotFound, "Client %d not found.", req.GetId())
 		}
-
 		return nil, err
 	}
+	log.Printf("Client '%d' was readed.", req.Id)
 	return &api.ResponseClient{[]*api.Client{&client}}, nil
 }
 
@@ -61,10 +63,11 @@ func (s *bankServer) CreateClient(ctx context.Context, req *api.RequestClient) (
 		)`
 	res, err := sqlstore.Db.NamedQuery(query, req.Req)
 	if err != nil {
+		log.Println(err)
 		return &api.ResponseClient{[]*api.Client{&api.Client{}}}, err
 	}
 	res.Close()
-
+	log.Printf("Client '%d' was created.", req.Req.Id)
 	return &api.ResponseClient{[]*api.Client{req.Req}}, nil
 }
 
@@ -77,7 +80,6 @@ func (s *bankServer) DeleteClient(ctx context.Context, req *api.RequestById) (*a
 		if err == sql.ErrNoRows {
 			return &api.ResponseClient{[]*api.Client{&api.Client{}}}, status.Errorf(codes.NotFound, "Client %d not found.", req.GetId())
 		}
-
 		return nil, err
 	}
 
@@ -86,6 +88,7 @@ func (s *bankServer) DeleteClient(ctx context.Context, req *api.RequestById) (*a
 		log.Println(err)
 		return nil, err
 	}
-	return &api.ResponseClient{[]*api.Client{&client}}, nil
+	log.Printf("Client '%d' was deleted.", req.Id)
 
+	return &api.ResponseClient{[]*api.Client{&client}}, nil
 }

@@ -13,6 +13,7 @@ func (s *bankServer) StartTransaction(comment string) (*api.Transaction, error) 
 	transaction.DiffMoney = make(map[int32]int64)
 	transaction.Comment = comment
 	if err := transaction.Validate(); err != nil {
+		log.Println(err)
 		return nil, err
 	}
 	sqlstore.Mutex.Lock()

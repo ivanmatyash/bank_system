@@ -16,8 +16,10 @@ func (s *bankServer) ListAccounts(ctx context.Context, req *api.RequestById) (*a
 	accounts := []*api.Account{}
 	err := sqlstore.Db.Select(&accounts, "SELECT * FROM accounts")
 	if err != nil {
+		log.Println(err)
 		return &api.ResponseAccount{[]*api.Account{}}, err
 	}
+	log.Println("Accounts were readed.")
 	return &api.ResponseAccount{accounts}, nil
 }
 
@@ -25,8 +27,11 @@ func (s *bankServer) ListAccountsByClient(ctx context.Context, req *api.RequestB
 	accounts := []*api.Account{}
 	err := sqlstore.Db.Select(&accounts, "SELECT * FROM accounts WHERE client_id = $1", req.GetId())
 	if err != nil {
+		log.Println(err)
 		return &api.ResponseAccount{[]*api.Account{}}, err
 	}
+	log.Printf("Accounts by client '%d' were readed.", req.Id)
+
 	return &api.ResponseAccount{accounts}, nil
 }
 
@@ -36,11 +41,13 @@ func (s *bankServer) ReadAccount(ctx context.Context, req *api.RequestById) (*ap
 	if err != nil {
 		log.Println(err)
 		if err == sql.ErrNoRows {
+			log.Println(err)
 			return &api.ResponseAccount{[]*api.Account{&api.Account{}}}, status.Errorf(codes.NotFound, "Account %d not found.", req.GetId())
 		}
-
+		log.Println(err)
 		return nil, err
 	}
+	log.Printf("Account '%s' was readed.", account.String())
 	return &api.ResponseAccount{[]*api.Account{&account}}, nil
 }
 
@@ -69,7 +76,7 @@ func (s *bankServer) CreateAccount(ctx context.Context, req *api.RequestAccount)
 		return &api.ResponseAccount{[]*api.Account{&api.Account{}}}, err
 	}
 	res.Close()
-
+	log.Printf("Account '%s' was created.", req.Req.String())
 	return &api.ResponseAccount{[]*api.Account{req.Req}}, nil
 }
 
@@ -107,11 +114,11 @@ func (s *bankServer) DeleteAccount(ctx context.Context, req *api.RequestById) (*
 	account := api.Account{}
 	err := sqlstore.Db.Get(&account, "SELECT * FROM accounts WHERE id=$1", req.GetId())
 	if err != nil {
-		log.Println(err)
 		if err == sql.ErrNoRows {
+			log.Println(err)
 			return &api.ResponseAccount{[]*api.Account{&api.Account{}}}, status.Errorf(codes.NotFound, "Account %d not found.", req.GetId())
 		}
-
+		log.Println(err)
 		return nil, err
 	}
 
@@ -120,6 +127,7 @@ func (s *bankServer) DeleteAccount(ctx context.Context, req *api.RequestById) (*
 		log.Println(err)
 		return nil, err
 	}
+	log.Printf("Account %s was deleted.", req.String())
 	return &api.ResponseAccount{[]*api.Account{&account}}, nil
 
 }

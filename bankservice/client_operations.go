@@ -2,6 +2,7 @@ package bankservice
 
 import (
 	"context"
+	"log"
 
 	"github.com/ivanmatyash/bank-golang/api"
 )
@@ -9,10 +10,12 @@ import (
 func (s *bankServer) ChangeBalance(ctx context.Context, in *api.RequestAccountMoney) (*api.ResponseAccount, error) {
 	transaction, err := s.StartTransaction("Balance changing.")
 	if err != nil {
+		log.Println(err)
 		return nil, err
 	}
 	in.Account.Balance += in.Money
 	if err := in.Account.Validate(); err != nil {
+		log.Println(err)
 		if err := s.EndTransaction(transaction, false); err != nil {
 			return nil, err
 		}
@@ -20,6 +23,7 @@ func (s *bankServer) ChangeBalance(ctx context.Context, in *api.RequestAccountMo
 	}
 	res, err := s.UpdateAccount(ctx, &api.RequestAccount{in.Account, in.Account.Id})
 	if err != nil {
+		log.Println(err)
 		if err := s.EndTransaction(transaction, false); err != nil {
 			return nil, err
 		}
@@ -29,6 +33,7 @@ func (s *bankServer) ChangeBalance(ctx context.Context, in *api.RequestAccountMo
 	transaction.DiffMoney[in.Account.Id] = in.GetMoney()
 
 	if err := s.EndTransaction(transaction, true); err != nil {
+		log.Println(err)
 		return nil, err
 	}
 	return &api.ResponseAccount{[]*api.Account{res.Result[0]}}, nil
@@ -37,16 +42,19 @@ func (s *bankServer) ChangeBalance(ctx context.Context, in *api.RequestAccountMo
 func (s *bankServer) GetBalance(ctx context.Context, in *api.RequestAccount) (*api.ResponseMoney, error) {
 	transaction, err := s.StartTransaction("Balance viewing.")
 	if err != nil {
+		log.Println(err)
 		return nil, err
 	}
 	res, err := s.ReadAccount(ctx, &api.RequestById{in.Req.Id})
 	if err != nil {
+		log.Println(err)
 		if err := s.EndTransaction(transaction, false); err != nil {
 			return nil, err
 		}
 		return nil, err
 	}
 	if err := s.EndTransaction(transaction, true); err != nil {
+		log.Println(err)
 		return nil, err
 	}
 	return &api.ResponseMoney{res.Result[0].Balance}, nil
