@@ -20,7 +20,6 @@ pg-start:
 	docker start pg-bank
 
 up: image pg-start
-	docker start pg-bank
 	docker run --name bank_microservice -d -p "9091:91" --network $(NETWORK) --network-alias bank.$(NETWORK) bank:latest
 	docker run --name gw_bank -d -p "8080:80" --network $(NETWORK) --network-alias gw-bank.$(NETWORK) gw-bank:latest
 
