@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"google.golang.org/grpc"
@@ -44,4 +45,13 @@ func newBankHandler(ctx context.Context, addr string, opts ...runtime.ServeMuxOp
 	}
 
 	return mux, nil
+}
+
+func init() {
+	if e := os.Getenv("GATEWAY_ADDR"); e != "" {
+		Addr = e
+	}
+	if e := os.Getenv("BANK_SERVER_ADDR"); e != "" {
+		BankAddr = e
+	}
 }

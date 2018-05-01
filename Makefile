@@ -20,8 +20,14 @@ pg-start:
 	docker start pg-bank
 
 up: image pg-start
-	docker run --name bank_microservice -d -p "9091:91" --network $(NETWORK) --network-alias bank.$(NETWORK) bank:latest
-	docker run --name gw_bank -d -p "8080:80" --network $(NETWORK) --network-alias gw-bank.$(NETWORK) gw-bank:latest
+	docker run --name bank_microservice -d -p "9091:91" \
+		-e BANK_SERVER_ADDR=0.0.0.0:91 \
+		--network $(NETWORK) --network-alias bank.$(NETWORK) bank:latest
+
+	docker run --name gw_bank -d -p "8080:80" \
+		-e GATEWAY_ADDR=0.0.0.0:80 \
+		-e BANK_SERVER_ADDR=bank.$(NETWORK):91 \
+		--network $(NETWORK) --network-alias gw-bank.$(NETWORK) gw-bank:latest
 
 db-create:
 	@echo "Creating database..."

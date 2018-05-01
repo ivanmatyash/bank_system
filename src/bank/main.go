@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 
 	"google.golang.org/grpc"
 
@@ -30,4 +31,11 @@ func main() {
 	api.RegisterBankServiceServer(server, bankservice.NewBankServer())
 
 	server.Serve(ln)
+}
+
+func init() {
+	if e := os.Getenv("BANK_SERVER_ADDR"); e != "" {
+		Addr = e
+	}
+
 }
