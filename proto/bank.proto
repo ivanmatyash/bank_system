@@ -49,6 +49,11 @@ message RequestTransferMoney {
     int64 money = 3;
 }
 
+message RequestTime {
+    int64 start = 1;
+    int64 end = 2;
+}
+
 message ResponseAccount {
     repeated Account result = 1;
 }
@@ -59,6 +64,10 @@ message ResponseClient {
 
 message ResponseMoney {
     int64 money = 1;
+}
+
+message ResponseTransaction {
+    repeated Transaction result = 1;
 }
 
 service BankService {
@@ -126,10 +135,17 @@ service BankService {
         };
     }
 
+    rpc ListTransaction(RequestTime) returns (ResponseTransaction) {
+        option (google.api.http) = {
+            get: "/transactions"
+        };
+    }
+
 
     rpc ChangeBalance(RequestAccountMoney) returns (ResponseAccount) {}
 
     rpc GetBalance(RequestAccount) returns (ResponseMoney) {}
 
     rpc TransferMoney(RequestTransferMoney) returns (ResponseAccount) {}
+
 }

@@ -1,12 +1,28 @@
 package bankservice
 
 import (
+	"context"
 	"log"
+	"math"
 	"time"
 
 	"github.com/ivanmatyash/bank-golang/api"
 	"github.com/ivanmatyash/bank-golang/sqlstore"
 )
+
+func (s *bankServer) ListTransaction(ctx context.Context, in *api.RequestTime) (*api.ResponseTransaction, error) {
+	transactions := []*api.Transaction{}
+	if in.End == 0 {
+		in.End = math.MaxInt64
+	}
+	err := sqlstore.Db.Select(&transactions, "SELECT * FROM transactions WHERE timestamp >= $1 AND timestamp <= $2", in.Start, in.End)
+	if err != nil {
+		log.Println(err)
+		return &api.ResponseTransaction{[]*api.Transaction{}}, err
+	}
+	log.Printf("Transactions were readed (start = %d, end = %d).", in.Start, in.End)
+	return &api.ResponseTransaction{transactions}, nil
+}
 
 func (s *bankServer) StartTransaction(comment string) (*api.Transaction, error) {
 	transaction := api.Transaction{}
