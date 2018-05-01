@@ -54,6 +54,10 @@ message RequestTime {
     int64 end = 2;
 }
 
+message RequestTransaction {
+    Transaction req = 1;
+}
+
 message ResponseAccount {
     repeated Account result = 1;
 }
@@ -147,5 +151,7 @@ service BankService {
     rpc GetBalance(RequestAccount) returns (ResponseMoney) {}
 
     rpc TransferMoney(RequestTransferMoney) returns (ResponseAccount) {}
+
+    rpc CancelTransaction(RequestTransaction) returns (ResponseTransaction) {}
 
 }

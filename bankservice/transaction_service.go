@@ -110,3 +110,73 @@ func saveMoneyChangesInDB(t *api.Transaction) error {
 	log.Println("Accounts changed: ", t.DiffMoney)
 	return nil
 }
+
+func (s *bankServer) CancelTransaction(ctx context.Context, in *api.RequestTransaction) (*api.ResponseTransaction, error) {
+	transaction, err := s.StartTransaction("Canceling transaction - " + in.Req.String())
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	type record struct {
+		TransactionId int32 `db:"transaction_id"`
+		AccountId     int32 `db:"account_id"`
+		Diff          int64
+	}
+
+	diffMoney := []*record{}
+
+	err = sqlstore.Db.Select(&diffMoney, "SELECT * FROM money_changes WHERE transaction_id = $1", in.Req.Id)
+	if err != nil {
+		log.Println(err)
+		if err := s.EndTransaction(transaction, false); err != nil {
+			log.Println(err)
+			return nil, err
+		}
+		return nil, err
+	}
+
+	accounts := []api.Account{}
+
+	for _, r := range diffMoney {
+		account := api.Account{}
+		err := sqlstore.Db.Get(&account, "SELECT * FROM accounts WHERE id=$1", r.AccountId)
+		if err != nil {
+			log.Println(err)
+			if err := s.EndTransaction(transaction, false); err != nil {
+				log.Println(err)
+				return nil, err
+			}
+			return nil, err
+		}
+		account.Balance -= r.Diff
+		if err := account.Validate(); err != nil {
+			log.Println(err)
+			if err := s.EndTransaction(transaction, false); err != nil {
+				log.Println(err)
+				return nil, err
+			}
+			return nil, err
+		}
+		accounts = append(accounts, account)
+
+		transaction.DiffMoney[r.AccountId] = -1 * r.Diff
+	}
+
+	for _, obj := range accounts {
+		if _, err := s.UpdateAccount(ctx, &api.RequestAccount{&obj, obj.Id}); err != nil {
+			log.Println(err)
+			if err := s.EndTransaction(transaction, false); err != nil {
+				log.Println(err)
+				return nil, err
+			}
+			return nil, err
+		}
+	}
+
+	if err := s.EndTransaction(transaction, true); err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	return &api.ResponseTransaction{[]*api.Transaction{in.Req}}, nil
+}
