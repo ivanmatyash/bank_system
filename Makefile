@@ -1,7 +1,7 @@
 NETWORK := net
 POSTGRES_IMAGE_NAME := postgres:10.3-alpine
 
-build:
+build: pg-start
 	CGO_ENABLED=0 go build -o ./bin/bank ./src/bank
 	CGO_ENABLED=0 go build -o ./bin/gw ./src/gw
 
