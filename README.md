@@ -80,5 +80,6 @@ execute some bank operations.
 
 `make down` - stopping and removing `gw_bank` and `bank_microservice` docker
 containers, removing `gw-bank` and `bank` docker images.
+
 `make clean` - the same as `make down` and also stopping and removing `pg-bank` docker
 container and image; removing docker network; removing `./bin` folder.
