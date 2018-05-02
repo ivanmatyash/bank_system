@@ -54,9 +54,12 @@ New transaction is creating for every operations with accounts. Transaction can 
 
 ### Try to build && run
 `make gen` - generating source codes from proto-schema by protoc compiler;
+
 `make dep` - downloads all project dependencies;
+
 `make init` - creating new docker network (called `net` by default) and create postgres docker
 container (named `pg-bank`. `postgres:10.3-alpine` image by default).
+
 `make up` - starting `pg-bank` (data store), `bank_microservice` (server)
 and `gw_bank` (grpc-gateway) docker containers. Depends on `image` target.
 
@@ -64,11 +67,14 @@ and `gw_bank` (grpc-gateway) docker containers. Depends on `image` target.
 This images copy `.bin` files and running their in alpine-container. Depends on `build` target.
 `make build` - compiling `.bin` files from source codes (move .bin files in /bin folder).
 
+
 In case of success execution of `make up` - try to execute `docker ps` - you will see
 3 docker containers (`pg-bank`, `bank_microservice` and `gw_bank`). Now you can to try
 execute some bank operations.
 
-Also you can use:
+
+
+### Also you can use:
 `make db-create` - migrating .sql schema from `./sqlstore/schema.sql` to postgres database
 (creating database and filling by testing data).
 
