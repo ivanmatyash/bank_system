@@ -154,4 +154,6 @@ service BankService {
 
     rpc CancelTransaction(RequestTransaction) returns (ResponseTransaction) {}
 
+    rpc FakeGateway(RequestClient) returns (ResponseClient) {}
+
 }

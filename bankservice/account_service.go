@@ -106,6 +106,23 @@ func (s *bankServer) UpdateAccount(ctx context.Context, req *api.RequestAccount)
 		return nil, status.Errorf(codes.NotFound, "Account %d not found.", req.GetId())
 	}
 
+	client := api.Client{}
+	err = sqlstore.Db.Get(&client, "SELECT * FROM clients WHERE id=$1", req.GetId())
+	if err != nil {
+		log.Println(err)
+		if err == sql.ErrNoRows {
+			log.Println(err)
+			return &api.ResponseAccount{[]*api.Account{&api.Account{}}}, status.Errorf(codes.NotFound, "Account %d not found.", req.GetId())
+		}
+		log.Println(err)
+		return nil, err
+	}
+
+	if _, err := s.FakeGateway(ctx, &api.RequestClient{&client}); err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
 	return &api.ResponseAccount{[]*api.Account{req.GetReq()}}, nil
 }
 
